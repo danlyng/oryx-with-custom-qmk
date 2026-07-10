@@ -1,5 +1,5 @@
 #define USB_SUSPEND_WAKEUP_DELAY 0
-#define SERIAL_NUMBER "ArjBK/6aM4DE"
+#define SERIAL_NUMBER "ArjBK/rbQPln"
 #define LAYER_STATE_16BIT
 #define COMBO_COUNT 4
 
