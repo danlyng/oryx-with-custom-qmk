@@ -47,6 +47,7 @@ enum custom_keycodes {
   ST_MACRO_37,
   ST_MACRO_38,
   ST_MACRO_39,
+  CMD_TAB_HOLD,
 };
 
 
@@ -72,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_GRAVE,       KC_Q,           KC_W,           KC_F,           KC_P,           KC_B,           KC_LPRN,                                        KC_RPRN,        KC_J,           KC_L,           KC_U,           KC_Y,           KC_SCLN,        KC_QUOTE,       
     KC_ESCAPE,      KC_A,           KC_R,           KC_S,           KC_T,           KC_G,           KC_LBRC,                                                                        KC_RBRC,        KC_M,           KC_N,           KC_E,           KC_I,           KC_O,           KC_DELETE,      
     KC_LEFT_SHIFT,  KC_Z,           KC_X,           KC_C,           KC_D,           LT(3, KC_V),                                    LT(2, KC_K),    KC_H,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_RIGHT_SHIFT, 
-    MO(7),          KC_LEFT_GUI,    KC_LEFT_ALT,    KC_LEFT_CTRL,   MO(4),          KC_TRANSPARENT,                                                                                                 ST_MACRO_0,     MO(1),          KC_RIGHT_CTRL,  KC_RIGHT_ALT,   KC_RIGHT_GUI,   MO(7),          
+    MO(7),          KC_LEFT_GUI,    KC_LEFT_ALT,    KC_LEFT_CTRL,   MO(4),          CMD_TAB_HOLD,                                                                                                 ST_MACRO_0,     MO(1),          KC_RIGHT_CTRL,  KC_RIGHT_ALT,   KC_RIGHT_GUI,   MO(7),          
     KC_SPACE,       KC_BSPC,        KC_CAPS,                        KC_MS_JIGGLER_TOGGLE,KC_TAB,         KC_ENTER
   ),
   [1] = LAYOUT_moonlander(
@@ -497,6 +498,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     break;
 
+    case CMD_TAB_HOLD:
+      if (record->event.pressed) {
+        // Register Cmd, tap Tab once, then keep Cmd held until release.
+        // A quick tap naturally produces Cmd+Tab; holding keeps Cmd down
+        // so subsequent Tab presses (or other keys) cycle apps.
+        register_code(KC_LEFT_GUI);
+        tap_code(KC_TAB);
+      } else {
+        unregister_code(KC_LEFT_GUI);
+      }
+      return false;
+
     case DUAL_FUNC_0:
       if (record->tap.count > 0) {
         if (record->event.pressed) {
@@ -718,4 +731,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
-
